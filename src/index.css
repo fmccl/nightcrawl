@@ -1,0 +1,9 @@
+body {
+    background-image: url("https://duffield-timber.transforms.svdcdn.com/production/gallery/walnut/Walnut-Appearance.jpg?w=800&h=533&q=85&fm=jpg&fit=crop&dm=1654770675&s=e341bd43250b00367701a2394b60666f");
+    background-size: cover;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.shadow {
+    box-shadow: 2px 2px 10px black;
+}

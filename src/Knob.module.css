@@ -1,0 +1,35 @@
+.knob {
+    background: radial-gradient(circle, #000, #333, #000);
+    width: 80px;
+    height: 80px;
+    border-radius: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    outline: 1px solid #888;
+}
+
+.pointer {
+    width: 6px;
+    height: 50%;
+    background-color: white;
+    border-radius: 3px;
+}
+
+.knobBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    width: 80px;
+    gap: 10px;
+}
+
+.tip {
+    backdrop-filter: brightness(0.8);
+    padding: 5px;
+    color: white;
+    border-radius: 10px;
+}
