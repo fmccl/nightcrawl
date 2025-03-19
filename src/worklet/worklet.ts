@@ -75,7 +75,7 @@ class JSDSPWorklet extends AudioWorkletProcessor {
         for (let channel = 0; channel < output.length; channel++) {
             const outputChannel = output[channel];
             for (let i = 0; i < outputChannel.length; i++) {
-                let wave = saw(this.phase);
+                let wave = this.controls.osc.shape * saw(this.phase) + (1 - this.controls.osc.shape) * Math.sin(this.phase);
                 wave *= this.controls.osc.clip;
                 if (wave > 1) {
                     wave = 1;

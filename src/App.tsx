@@ -102,7 +102,12 @@ function App() {
         onClick={async () => {
           const audioCtx = new AudioContext();
           await audioCtx.audioWorklet.addModule(
-            new URL("./worklet/worklet.ts", import.meta.url)
+            new URL(
+              import.meta.env.MODE === "production"
+                ? "./worklet.js"
+                : "./worklet/worklet.ts",
+              import.meta.url
+            )
           );
 
           const node = new AudioWorkletNode(audioCtx, "jsdsp-worklet", {

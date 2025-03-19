@@ -15,6 +15,14 @@ function control<T extends ControlComponent>(c: Control<T>): Control<T> & { "__c
 export const controls = {
     osc: {
         __label__: "Oscillator",
+        shape: control({
+            component: Knob, props: {
+                label: "Shape",
+                maxValue: 1,
+                minValue: 0,
+                initialValue: 1
+            }
+        }),
         waveFold: control({
             component: Knob, props: {
                 label: "Wave Fold",
