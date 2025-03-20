@@ -10,11 +10,11 @@ export const Knob = Object.assign(
     onChange?: (value: number) => void;
     units?: string;
   }) => {
-    useEffect(() => {
-      if (props.onChange) props.onChange(props.initialValue ?? 0);
-    }, []);
-
     let [value, setValue] = useState(props.initialValue ?? 0);
+
+    useEffect(() => {
+      if (props.onChange) props.onChange(value);
+    }, []);
 
     let [clicking, setClicking] = useState(false);
 

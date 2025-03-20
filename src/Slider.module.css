@@ -3,7 +3,7 @@
         linear-gradient(#222, #333)
     ;
     height: 100%;
-    width: 40%;
+    width: 20%;
     border-radius: 10px;
     outline: 1px solid #666;
 }
@@ -21,11 +21,11 @@
     height: 150px;
     overflow: visible;
     position: relative;
-    left: -15px;
+    left: -20px;
 }
 
 .head {
-    width: 200%;
+    width: 300%;
     height: 20px;
     background: linear-gradient(black 35%, white 46%, white 60%, black 61%);
     position: relative;

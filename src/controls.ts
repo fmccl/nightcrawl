@@ -12,6 +12,10 @@ function control<T extends ControlComponent>(c: Control<T>): Control<T> & { "__c
     return c as any;
 }
 
+const paramsString = window.location.search;
+const params = new URLSearchParams(paramsString);
+const initialValues = JSON.parse(params.get("patch") || "{}");
+
 export const controls = {
     osc: {
         __label__: "Oscillator",
@@ -25,7 +29,7 @@ export const controls = {
         }),
         waveFold: control({
             component: Knob, props: {
-                label: "Wave Fold",
+                label: "Fold",
                 maxValue: 2,
                 minValue: 1,
                 initialValue: 1
@@ -34,7 +38,7 @@ export const controls = {
         clip: control({
             component: Knob, props: {
                 label: "Clip",
-                maxValue: 10,
+                maxValue: 5,
                 minValue: 1,
                 initialValue: 1
             }
@@ -70,6 +74,36 @@ export const controls = {
     },
     filter_envelope: envelope("Filter Envelope"),
     amp_envelope: envelope("Amp Envelope"),
+}
+
+let controlValues = {};
+
+export function change(path: string[], value: any) {
+    let cur = controlValues;
+    const name = path.pop();
+    for (let i = 0; i < path.length; i++) {
+        if (cur[path[i]] === undefined) {
+            cur[path[i]] = {};
+        }
+        cur = cur[path[i]];
+    }
+    cur[name] = value;
+}
+
+export function getInitialValue(path: string[]) {
+    let cur = initialValues;
+    const name = path.pop();
+    for (let i = 0; i < path.length; i++) {
+        if (cur[path[i]] === undefined) {
+            return undefined;
+        }
+        cur = cur[path[i]];
+    }
+    return cur[name];
+}
+
+export function copyPatch() {
+    return encodeURIComponent(JSON.stringify(controlValues));
 }
 
 function envelope(__label__: string) {

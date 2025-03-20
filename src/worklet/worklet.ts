@@ -103,7 +103,11 @@ class JSDSPWorklet extends AudioWorkletProcessor {
 
 
 function saw(phase: number) {
-    return 2 * Math.PI - phase;
+    // Normalize phase to the range [0, 2π)
+    phase = phase % (2 * Math.PI);
+
+    // Convert phase to a range of -1 to 1
+    return (phase / Math.PI) - 1;
 }
 
 class Envelope { // TODO: Curve

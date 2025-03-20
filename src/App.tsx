@@ -1,6 +1,7 @@
 import { JSXElementConstructor, useEffect, useState } from "react";
 import styles from "./App.module.css";
-import { controls, ControlSpec } from "./controls";
+import { change, controls, copyPatch, getInitialValue } from "./controls";
+import Oscilloscope from "./Oscilloscope";
 
 function getNoteFrequency(key, octave) {
   const keyMap = {
@@ -51,6 +52,10 @@ function App() {
   let [octave, setOctave] = useState(0); // Relative to A4
 
   let [node, setNode] = useState<AudioWorkletNode | null>(null);
+
+  let [analyzer, setAnalyser] = useState<AnalyserNode | null>(null);
+  let [dataArray, setDataArray] = useState(new Uint8Array(0));
+  let [bufferLength, setBufferLength] = useState(0);
 
   let [pressedKeys, setPressedKeys] = useState(new Set());
 
@@ -116,6 +121,19 @@ function App() {
 
           node.connect(audioCtx.destination);
 
+          const analyzer = new AnalyserNode(audioCtx);
+
+          analyzer.fftSize = 2048;
+          node.connect(analyzer);
+          const bufferLength = analyzer.frequencyBinCount;
+          const dataArray = new Uint8Array(bufferLength);
+
+          analyzer.getByteTimeDomainData(dataArray);
+
+          setAnalyser(analyzer);
+          setDataArray(dataArray);
+          setBufferLength(bufferLength);
+
           setNode(node);
         }}
       >
@@ -133,7 +151,13 @@ function App() {
         <Component
           key={path.join(".")}
           {...controls.props}
-          onChange={(v) => node?.port.postMessage({ path, value: v })}
+          initialValue={
+            getInitialValue(path.slice()) ?? controls.props.initialValue
+          }
+          onChange={(v) => {
+            node?.port.postMessage({ path: path.slice(), value: v });
+            change(path.slice(), v);
+          }}
         />
       );
     } else {
@@ -151,6 +175,33 @@ function App() {
               ) : (
                 createControls(controls[key], [...path, key], true)
               )
+            )}
+            {group ? (
+              <></>
+            ) : (
+              <>
+                <Oscilloscope {...{ analyzer, dataArray, bufferLength }} />
+                <div className={styles.group}>
+                  <div>
+                    <h2>Presets</h2>
+                  </div>
+                  <div>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          "https://nightcrawl.vercel.app/?patch=" + copyPatch()
+                        );
+                        alert(
+                          "Copied to clipboard!\n\nhttps://nightcrawl.vercel.app/?patch=" +
+                            copyPatch()
+                        );
+                      }}
+                    >
+                      Copy this preset
+                    </button>
+                  </div>
+                </div>
+              </>
             )}
           </div>
         </div>
